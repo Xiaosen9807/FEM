@@ -6,11 +6,11 @@ from scipy.sparse.linalg import spsolve
 from gauss import quadrature
 from elastic import constitutive
 from shape_fns import fns_2, fns_3, fns_4, jacobian
-print('xxx', sys.argv[0])
+print('xxx', sys.argv)
 # read data from properly formatted json-formatted file
 try:
     #filename = sys.argv[1]
-    filename = '/input/patch_test.vtk'
+    filename = '/input/patch_test.json'
     with open(filename) as f:
 
         print("-- Reading file '{}'".format(filename))
