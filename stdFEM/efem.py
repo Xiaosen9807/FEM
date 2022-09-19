@@ -10,7 +10,7 @@ print('xxx', sys.argv)
 # read data from properly formatted json-formatted file
 try:
     #filename = sys.argv[1]
-    filename = '/input/patch_test.json'
+    filename = sys.path[0]+'/input/'+'patch_test.json'
     with open(filename) as f:
 
         print("-- Reading file '{}'".format(filename))
