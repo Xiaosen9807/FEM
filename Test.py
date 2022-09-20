@@ -1,16 +1,13 @@
-import sys
+import torch
+from torch import atan
+from torch.autograd import grad
+import numpy as np
+import matplotlib.pyplot as pltcon
+from scipy.interpolate import lagrange
+from scipy.misc import derivative
 
-print ('The command line arguments are:')
-for i in sys.argv:
-    print ('xxx', i)
+from sympy import symbols, integrate, sinh, E, diff
+import sympy as sp
+from scipy.special import roots_legendre
 
-print ('\n\nThe PYTHONPATH is', sys.path[1], '\n')
-
-filename = sys.path[0]+'/stdFEM/input/'+'bar.json'
-print('/Users/qinxusen/Desktop/FEM/stdFEM/input/bar.json')
-print(filename)
-
-def test():
-    dun = diff(un, x)
-    Bn = integrate((dun**2+un**2), (x, 0, 1))
-    An = (1/2*Bn)**0.5
+print('hello')
