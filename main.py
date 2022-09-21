@@ -11,6 +11,8 @@ from scipy.special import roots_legendre
 from Func import *
 
 
+
+
 def f(x, a=0.5, xb=0.8):
     return (1 - x) * (sp.atan(a * (x - xb)) + sp.atan(a*xb))
 
@@ -21,13 +23,20 @@ xb = 0.8
 u = f_test(x)
 un = fn_test(x)
 
-print(error(u, un, x))
 
 
+xjm1, xj, xjp1 = sympy.symbols(['x_{j-1}', 'x_{j}', 'x_{j+1}'])
+x, h, eps = sympy.symbols(['x', 'h', '\epsilon'])
+rho = lambda x: sympy.sin(sympy.pi * x)
+rho_ = f(x, 0.5, 0.8)
 
-x = np.linspace(0, 2*np.pi, 10, endpoint=True)  # 0到2*pi，等分十个，最后一个值包含
-y = np.sin(x)
-"""print(x)
-print(y)"""
-lag_interp = LagrangeInterpolation(x=x, y=y)
-lag_interp.fit_interp()
+A = - sympy.integrate(rho(x) * (x - xjm1)/h, (x, xjm1, xj))
+B = - sympy.integrate(rho(x) * (xjp1 - x)/h, (x, xj, xjp1))
+
+result = sympy.simplify(A + B)
+
+print(type(result))
+print(type(u))
+
+#print(error(u, result))
+
