@@ -70,7 +70,7 @@ def error(u, un):
     dut = diff(un-u, x)
     Bt = G_integrate(dut**2+(un-u)**2, x)
     At = (1/2*Bt)**0.5
-    return float(At.evalf()/A.evalf())
+    return float((At.evalf()/A.evalf())**0.5)
 
 def lagrange(x, y, num_points, x_test):
     # 所有的基函数值，每个元素代表一个基函数的值
