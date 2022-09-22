@@ -1,18 +1,20 @@
 # import os
 # os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
-from hashlib import new
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import lagrange
 from scipy.misc import derivative
 
 from sympy import symbols
+
+
 from sympy import *
 import sympy as sp
 from scipy.special import roots_legendre
 
 from Func import *
+
 
 
 
@@ -25,6 +27,7 @@ def d2f(x, a=0.5, xb=0.2):
 x = symbols('x')
 a = 0.5
 xb = 0.8
+
 u = f_test(x)
 un = fn_test(x)
 du = diff(u, x)

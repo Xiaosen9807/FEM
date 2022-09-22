@@ -11,3 +11,5 @@ import sympy as sp
 from scipy.special import roots_legendre
 
 print('hello')
+print(torch.linspace(1, 10, 10))
+print(np.linspace(1, 10, 10))
