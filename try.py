@@ -58,7 +58,7 @@ def fem1d_test():
 #
     a = 0.0
     b = 1.0
-    n = 6
+    n = 10
     x = np.linspace(a, b, n + 1)
 
     print('')
@@ -166,12 +166,13 @@ def fem1d_test():
 #
 #  Compare the solution and the error at the nodes.
 #
-    print('')
-    print('  Node          Ucomp           Uexact          Error')
-    print('')
+    # print('')
+    # print('  Node          Ucomp           Uexact          Error')
+    # print('')
+    err = []
     for i in range(0, n + 1):
-        err = abs(uex[i] - u[i])
-        print('  %4d  %14.6g  %14.6g  %14.6g' % (i, u[i], uex[i], err))
+        err.append(abs(uex[i] - u[i]))
+        # print('  %4d  %14.6g  %14.6g  %14.6g' % (i, u[i], uex[i], err))
 #
 #  Plot the computed solution and the exact solution.
 #  Evaluate the exact solution at enough points that the curve will look smooth.
@@ -193,91 +194,30 @@ def fem1d_test():
     print('')
     print('fem1d_test():')
     print('  Normal end of execution.')
+    return err
 
 
 def exact_fn(x):
 
-    # *****************************************************************************80
-    #
     # exact_fn() evaluates the exact solution.
-    #
-    #  Licensing:
-    #
-    #    This code is distributed under the GNU LGPL license.
-    #
-    #  Modified:
-    #
-    #    06 April 2013
-    #
-    #  Author:
-    #
-    #    John Burkardt
-    #
-    #  Input:
-    #
-    #    real X, the evaluation point.
-    #
-    #  Output:
-    #
-    #    real VALUE, the exact solution at X.
-    #
 
-    value = x * (1 - x) * np.exp(x)
-
+    # value = x * (1 - x) * np.exp(x)
+    value = (1 - x) * (np.arctan(a * (x - xb)) + np.arctan(a*xb))
     return value
 
 
 def rhs_fn(x):
 
-    # *****************************************************************************80
-    #
     # rhs_fn() evaluates the right hand side.
-    #
-    #  Licensing:
-    #
-    #    This code is distributed under the GNU LGPL license.
-    #
-    #  Modified:
-    #
-    #    06 April 2013
-    #
-    #  Author:
-    #
-    #    John Burkardt
-    #
-    #  Input:
-    #
-    #    real X, the evaluation point.
-    #
-    #  Output:
-    #
-    #    real VALUE, the right hand side at X.
-    #
+    # value = x * (x + 3) * np.exp(x)
 
-    value = x * (x + 3) * np.exp(x)
+    B = x-xb
+    value = 2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
 
     return value
 
 
 def timestamp():
-
-    # *****************************************************************************80
-    #
-    # timestamp() prints the date as a timestamp.
-    #
-    #  Licensing:
-    #
-    #    This code is distributed under the GNU LGPL license.
-    #
-    #  Modified:
-    #
-    #    06 April 2013
-    #
-    #  Author:
-    #
-    #    John Burkardt
-    #
-
     t = time.time()
     print(time.ctime(t))
 
@@ -285,6 +225,9 @@ def timestamp():
 
 
 if (__name__ == '__main__'):
+    a = 50
+    xb=0.2
     timestamp()
-    fem1d_test()
+    err = fem1d_test()
     timestamp()
+    print(err)
