@@ -124,11 +124,11 @@ def fem1d_linear(f, d2f, n=13):
     # plt.show()
 
     # plt.figure()
-    plt.plot(x, u, 'bo-', label='true')
-    plt.plot(xp, up, 'r.', label='simu')
+    plt.plot(x, u, 'bo-', label='u')
+    plt.plot(xp, up, 'r.', label='up')
     plt.legend()
     plt.show()
-    print(xp)
+    #print(xp)
 
     return err, u, up
 

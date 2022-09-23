@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.linalg as la
+import sympy as sp
 
 
 def fem1d_quadratic(f, d2f, n_num=11):
@@ -116,7 +117,9 @@ def fem1d_quadratic(f, d2f, n_num=11):
 #
 #  Solve the linear system.
 #
+    #u = la.solve(A, rhs)
     u = la.solve(A, rhs)
+    print('xxxxxxx', u)
 #
 #  Evaluate the exact solution at the nodes.
 #
@@ -143,10 +146,12 @@ def fem1d_quadratic(f, d2f, n_num=11):
     up = np.zeros(npp)
     for i in range(0, npp):
         up[i] = f(xp[i])
-
-    plt.plot(x, u, 'bo-')
-    plt.plot(xp, up, 'r.')
+        
+    plt.plot(x, u, 'bo-', label='u')
+    plt.plot(xp, up, 'r.', label='up')
+    plt.legend()
     plt.show()
+
     
     return err_tot, up, u
 
