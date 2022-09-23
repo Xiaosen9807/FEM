@@ -7,7 +7,7 @@ import scipy.linalg as la
 import time
 
 
-def fem1d_linear(n=10):
+def fem1d_linear(n=13):
     #
     #  Define the mesh, N+1 points between A and B.
     #  These will be X[0] through X[N].

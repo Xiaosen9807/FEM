@@ -195,7 +195,7 @@ def fem1d_bvp_quadratic(n, a, c, f, x):
 
 def fem1d_bvp_quadratic_test00():
 
-    n = 11
+    n = 10
 
 #
 #  Geometry definitions.
@@ -681,4 +681,5 @@ if (__name__ == '__main__'):
     xb = 0.2
     fem1d_bvp_quadratic_test00()
     l2_error_quadratic_test()
+
 
