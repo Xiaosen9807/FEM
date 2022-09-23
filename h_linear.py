@@ -1,4 +1,4 @@
-# %%
+#%%
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,7 +7,7 @@ import scipy.linalg as la
 import time
 
 
-def fem1d_linear(n=13):
+def fem1d_linear(f, d2f, n=13):
     #
     #  Define the mesh, N+1 points between A and B.
     #  These will be X[0] through X[N].
@@ -64,7 +64,7 @@ def fem1d_linear(n=13):
                     phii = (xq - xl) / (xr - xl)
                     phiip = 1.0 / (xr - xl)
 
-                rhs[i] = rhs[i] + wq * phii * rhs_fn(xq)
+                rhs[i] = rhs[i] + wq * phii * d2f(xq)
 #
 #  Consider the J-th basis function PHI(J,X) and its derivative PHI'(J,X).
 #  (It turns out we don't need PHI for this particular problem, only PHI')
@@ -83,27 +83,27 @@ def fem1d_linear(n=13):
 #
     A[0, 0] = 1.0
     A[0, 1:n+1] = 0.0
-    rhs[0] = exact_fn(x[0])
+    rhs[0] = f(x[0])
 #
 #  Modify the linear system to enforce the right boundary condition.
 #
     A[n, n] = 1.0
     A[n, 0:n] = 0.0
-    rhs[n] = exact_fn(x[n])
+    rhs[n] = f(x[n])
     # plt.plot(rhs)
     # plt.show()
 
-    print(A)
-    print('_-----------------------\n', rhs)
+    # print(A)
+    # print('_-----------------------\n', rhs)
 #  Solve the linear system.
 #
-    u = la.solve(A, rhs)
+    u = la.solve(A, -rhs)
 #
 #  Evaluate the exact solution at the nodes.
 #
     uex = np.zeros(n + 1)
     for i in range(0, n + 1):
-        uex[i] = exact_fn(x[i])
+        uex[i] = f(x[i])
     err = []
     for i in range(0, n + 1):
         err.append(abs(uex[i] - u[i]))
@@ -116,7 +116,7 @@ def fem1d_linear(n=13):
     xp = np.linspace(a, b, npp)
     up = np.zeros(npp)
     for i in range(0, npp):
-        up[i] = exact_fn(xp[i])
+        up[i] = f(xp[i])
 
     #plt.plot(x, u, 'bo-', xp, up, 'r.')
     filename = 'fem1d.png'
@@ -133,22 +133,26 @@ def fem1d_linear(n=13):
     return err, u, up
 
 
-def exact_fn(x):
+def exact_fn(x, a=0.5, xb=0.2):
 
-    value = (1 - x) * (np.arctan(a * (x - xb)) + np.arctan(a*xb))
+    #value = (1 - x) * (np.arctan(a * (x - xb)) + np.arctan(a*xb))
+    value = x * ( 1 - x ) * np.exp ( x )
     return value
 
 
-def rhs_fn(x): # PDE
+def rhs_fn(x, a=0.5, xb=0.2):  # PDE
 
     B = x-xb
-    value = 2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
+    #value = -2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
+    value = -x * ( x + 3 ) * np.exp ( x )
     return value
 
 
 if __name__ == '__main__':
     a = 0.5
     xb = 0.2
-    err, u, up = fem1d_linear(5)
+    #err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
+    err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
     print(err)
+    #plt.plot(err)
 # %%
