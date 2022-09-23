@@ -1,71 +1,20 @@
+# %%
+
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
-import platform
 import scipy.linalg as la
 import time
 
 
-def fem1d_test():
-
-    # *****************************************************************************80
+def fem1d_linear(n=10):
     #
-    # fem1d_test() solves a 1D boundary value problem using finite elements.
+    #  Define the mesh, N+1 points between A and B.
+    #  These will be X[0] through X[N].
     #
-    #  Discussion:
-    #
-    #    The PDE is defined for 0 < x < 1:
-    #      -u'' = f
-    #    with right hand side
-    #      f(x) = -(exact(x)'')
-    #    and boundary conditions
-    #      u(0) = exact(0),
-    #      u(1) = exact(1).
-    #
-    #    The exact solution is:
-    #      exact(x) = x * ( 1 - x ) * exp ( x )
-    #    The boundary conditions are
-    #      u(0) = 0.0 = exact(0.0),
-    #      u(1) = 0.0 = exact(1.0).
-    #    The right hand side is:
-    #      f(x) = x * ( x + 3 ) * exp ( x ) = - ( exact''(x) )
-    #
-    #  Licensing:
-    #
-    #    This code is distributed under the GNU LGPL license.
-    #
-    #  Modified:
-    #
-    #    13 September 2014
-    #
-    #  Author:
-    #
-    #    John Burkardt
-    #
-
-    print('')
-    print('fem1d_test')
-    print('  Python version: %s' % (platform.python_version()))
-    print('  Given the two point boundary value problem:')
-    print('    -u'' = x * ( x + 3 ) * exp ( x ), 0 < x < 1')
-    print('  with boundary conditions')
-    print('    u(0) = 0, u(1) = 0,')
-    print('  demonstrate how the finite element method can be used to')
-    print('  define and compute a discrete approximation to the solution.')
-#
-#  Define the mesh, N+1 points between A and B.
-#  These will be X[0] through X[N].
-#
     a = 0.0
     b = 1.0
-    n = 10
     x = np.linspace(a, b, n + 1)
-
-    print('')
-    print('  Nodes:')
-    print('')
-    for i in range(0, n + 1):
-        print('  %d  %f' % (i, x[i]))
 #
 #  Set a 3 point quadrature rule on the reference interval [0,1].
 #
@@ -141,19 +90,11 @@ def fem1d_test():
     A[n, n] = 1.0
     A[n, 0:n] = 0.0
     rhs[n] = exact_fn(x[n])
-#
-#  I wanted to check the matrix and right hand side so I printed them.
-#  I turned the printing off using 'False' as the condition.
-#
-    if False:
-        print('')
-        print('  Matrix and RHS:')
-        print('')
-        for i in range(0, n + 1):
-            for j in range(0, n + 1):
-                print('  %f' % (A[i, j])),
-            print('  %f' % (rhs[i]))
-#
+    # plt.plot(rhs)
+    # plt.show()
+
+    print(A)
+    print('_-----------------------\n', rhs)
 #  Solve the linear system.
 #
     u = la.solve(A, rhs)
@@ -163,12 +104,6 @@ def fem1d_test():
     uex = np.zeros(n + 1)
     for i in range(0, n + 1):
         uex[i] = exact_fn(x[i])
-#
-#  Compare the solution and the error at the nodes.
-#
-    # print('')
-    # print('  Node          Ucomp           Uexact          Error')
-    # print('')
     err = []
     for i in range(0, n + 1):
         err.append(abs(uex[i] - u[i]))
@@ -183,51 +118,37 @@ def fem1d_test():
     for i in range(0, npp):
         up[i] = exact_fn(xp[i])
 
-    plt.plot(x, u, 'bo-', xp, up, 'r.')
+    #plt.plot(x, u, 'bo-', xp, up, 'r.')
     filename = 'fem1d.png'
     plt.savefig(filename)
-    plt.show(block=False)
-    plt.close()
-#
-#  Terminate.
-#
-    print('')
-    print('fem1d_test():')
-    print('  Normal end of execution.')
-    return err
+    # plt.show()
+
+    # plt.figure()
+    plt.plot(x, u, 'bo-', label='true')
+    plt.plot(xp, up, 'r.', label='simu')
+    plt.legend()
+    plt.show()
+    print(xp)
+
+    return err, u, up
 
 
 def exact_fn(x):
 
-    # exact_fn() evaluates the exact solution.
-
-    # value = x * (1 - x) * np.exp(x)
     value = (1 - x) * (np.arctan(a * (x - xb)) + np.arctan(a*xb))
     return value
 
 
-def rhs_fn(x):
-
-    # rhs_fn() evaluates the right hand side.
-    # value = x * (x + 3) * np.exp(x)
+def rhs_fn(x): # PDE
 
     B = x-xb
     value = 2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
-
     return value
 
 
-def timestamp():
-    t = time.time()
-    print(time.ctime(t))
-
-    return None
-
-
-if (__name__ == '__main__'):
-    a = 50
-    xb=0.2
-    timestamp()
-    err = fem1d_test()
-    timestamp()
+if __name__ == '__main__':
+    a = 0.5
+    xb = 0.2
+    err, u, up = fem1d_linear(5)
     print(err)
+# %%
