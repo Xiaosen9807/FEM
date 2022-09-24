@@ -1,4 +1,4 @@
-#%%
+# %%
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.linalg as la
@@ -119,7 +119,7 @@ def fem1d_quadratic(f, d2f, n_num=11):
 #
     #u = la.solve(A, rhs)
     u = la.solve(A, rhs)
-    print('xxxxxxx', u)
+    #print('xxxxxxx', u)
 #
 #  Evaluate the exact solution at the nodes.
 #
@@ -128,15 +128,15 @@ def fem1d_quadratic(f, d2f, n_num=11):
         uex[i] = f(x[i])
 #
 #  Compare the solution and the error at the nodes.
-#
-    print("")
-    print("  Node          Ucomp           Uexact          Error")
-    print("")
+# #
+#     print("")
+#     print("  Node          Ucomp           Uexact          Error")
+#     print("")
     err_tot = []
     for i in range(0, n_num):
         err = abs(uex[i] - u[i])
         err_tot.append(err)
-        print("  %4d  %14.6g  %14.6g  %14.6g" % (i, u[i], uex[i], err))
+#         print("  %4d  %14.6g  %14.6g  %14.6g" % (i, u[i], uex[i], err))
 #
 #  Plot the computed solution and the exact solution.
 #  Evaluate the exact solution at enough points that the curve will look smooth.
@@ -146,15 +146,13 @@ def fem1d_quadratic(f, d2f, n_num=11):
     up = np.zeros(npp)
     for i in range(0, npp):
         up[i] = f(xp[i])
-        
+
     plt.plot(x, u, 'bo-', label='u')
     plt.plot(xp, up, 'r.', label='up')
     plt.legend()
     plt.show()
 
-    
-    return err_tot, up, u
-
+    return err_tot, u, up
 
 
 def exact_fn(x, a=0.5, xb=0.8):
@@ -182,7 +180,7 @@ def rhs_fn(x, a=0.5, xb=0.8):
 if (__name__ == '__main__'):
     a = 0.5
     xb = 0.2
-    err, up,u = fem1d_quadratic( exact_fn, rhs_fn, 7)
+    err, u, up = fem1d_quadratic(exact_fn, rhs_fn, 7)
     print(err)
-    #plt.plot(err)
-    #%%
+    # plt.plot(err)
+    # %%

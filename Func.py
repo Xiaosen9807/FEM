@@ -22,7 +22,7 @@ def fn_test(x):
     return 0.14588*x*(1-x)+0.16279*x**2*(1-x)
 
 
-def G_integrate(u, x, N=10, scale=(0, 1)):
+def G_integrate(u, x, N=3, scale=(0, 1)):
     N = N  # 取3个样本点
     a = scale[0]  # 积分上下限
     b = scale[1]
@@ -106,18 +106,6 @@ def l2_error_quadratic(n, x, u, exact):
     #
     #      L2_NORM = Integral ( A <= X <= B ) ( U(X) - EXACT(X) )^2 dX
     #
-    #  Licensing:
-    #
-    #    This code is distributed under the GNU LGPL license.
-    #
-    #  Modified:
-    #
-    #    12 July 2015
-    #
-    #  Author:
-    #
-    #    John Burkardt
-    #
     #  Input:
     #
     #    integer N, the number of nodes.
@@ -138,10 +126,8 @@ def l2_error_quadratic(n, x, u, exact):
     #
     #  Define a 2 point Gauss-Legendre quadrature rule on [-1,+1].
     #
-    quad_num = 2
-    abscissa = np.array([-0.577350269189625764509148780502,
-                         +0.577350269189625764509148780502])
-    weight = np.array([1.0, 1.0])
+    quad_num = 3
+    abscissa, weight= roots_legendre(quad_num)
     #
     #  Integrate over each interval.
     #
@@ -183,14 +169,16 @@ def l2_error_quadratic(n, x, u, exact):
             eq = exact(xq)
 
             e2 = e2 + wq * (uq - eq) ** 2
+    
+    #print('e2', e2)
 
-    e2 = np.sqrt(e2)
+    e2 = e2**0.5
 
     return e2
 
 
 if __name__ == '__main__':
-    x_n = 100
+    x_n = 11
 
     x_lo = 0.0
     x_hi = np.pi

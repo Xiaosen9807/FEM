@@ -26,30 +26,46 @@ def d2f(x):
 
 a = 0.5
 xb = 0.2
-err_l, up_l, u_l = fem1d_linear(f, d2f, 6) 
-err_q, up_q, u_q = fem1d_quadratic(f, d2f, 7)
+err_l_tot=[]
+err_q_tot=[]
+x_data = 2**np.linspace(1, 5, 5)
+for i in x_data:
+    
+    err_l, up_l, u_l = fem1d_linear(f, d2f, int(i)) 
+    err_q, up_q, u_q = fem1d_quadratic(f, d2f, int(i)+1)
+    
+    
+    # print(err_l)
+    # #plt.plot(err_l, label='error of of linear elements')
+    
+    # print(err_q)
+    #plt.plot(err_q, label='error of of quadratic elements')
+    #plt.legend()
+    
+    
+    x_n = len(up_l)
+    #print(len(up_l))
+    x_lo = 0.0
+    x_hi = 1
+    x = np.linspace(x_lo, x_hi, x_n)
+    
+    # U is an approximation to sin(x).
 
 
-print(err_l)
-plt.plot(err_l, label='error of of linear elements')
-
-print(err_q)
-plt.plot(err_q, label='error of of quadratic elements')
+    e_l = l2_error_quadratic(x_n, x, up_l, f)
+    e_q = l2_error_quadratic(x_n, x, up_q, f)
+    err_l_tot.append(sp.log(e_l))
+    err_q_tot.append(sp.log(e_q))
+    # err_l_tot.append(e_l)
+    # err_q_tot.append(e_q)
+    print('  %2d  %g' % (x_n, e_l))
+    print('  %2d  %g' % (x_n, e_q))
+    
+print(len(x_data))
+plt.scatter(x_data, err_l_tot, label='Linear Error')
+plt.scatter(x_data, err_q_tot, label='Quadratic Error')
 plt.legend()
+plt.show()
+print(err_l_tot)
+print(err_q_tot)
 
-
-x_n = len(u_l)
-  
-x_lo = 0.0
-x_hi = 1
-x = np.linspace(x_lo, x_hi, x_n)
-
-# U is an approximation to sin(x).
-
-# u = np.zeros(x_n)
-# for i in range(0, x_n):
-#     u[i] = np.sin(x[i])
-
-e1 = l2_error_quadratic(x_n, x, u_l, f)
-
-print('  %2d  %g' % (x_n, e1))
