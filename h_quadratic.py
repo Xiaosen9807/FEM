@@ -34,6 +34,21 @@ def fem1d_quadratic(f, d2f, n_num=11):
         5.0 / 9.0,
         8.0 / 9.0,
         5.0 / 9.0))
+    
+#
+#  Set a 3 point quadrature rule on the reference interval [0,1].
+#
+    # q_num = 3
+
+    # xg = np.array((
+    #     0.112701665379258311482073460022,
+    #     0.5,
+    #     0.887298334620741688517926539978))
+
+    # wg = np.array((
+    #     5.0 / 18.0,
+    #     8.0 / 18.0,
+    #     5.0 / 18.0))
 #
 #  Compute the system matrix A and right hand side RHS.
 #
@@ -149,6 +164,7 @@ def fem1d_quadratic(f, d2f, n_num=11):
 
     plt.plot(x, u, 'bo-', label='u')
     plt.plot(xp, up, 'r.', label='up')
+    plt.title('h_quadratic')
     plt.legend()
     plt.show()
 
@@ -184,3 +200,4 @@ if (__name__ == '__main__'):
     print(err)
     # plt.plot(err)
     # %%
+

@@ -1,4 +1,4 @@
-#%%
+# %%
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,19 +16,26 @@ def fem1d_linear(f, d2f, n=13):
     b = 1.0
     x = np.linspace(a, b, n + 1)
 #
-#  Set a 3 point quadrature rule on the reference interval [0,1].
+#  Set a 3 point quadrature rule on the reference interval [-1,1].
 #
-    ng = 3
+    q_num = 3
 
     xg = np.array((
-        0.112701665379258311482073460022,
-        0.5,
-        0.887298334620741688517926539978))
+        # 0.112701665379258311482073460022,
+        # 0.5,
+        # 0.887298334620741688517926539978))
+    -0.774596669241483377035853079956,
+    0.0,
+    0.774596669241483377035853079956))
 
     wg = np.array((
-        5.0 / 18.0,
-        8.0 / 18.0,
-        5.0 / 18.0))
+        # 5.0 / 18.0,
+        # 8.0 / 18.0,
+        # 5.0 / 18.0))
+        5.0 / 9.0,
+        8.0 / 9.0,
+        5.0 / 9.0))
+
 #
 #  Compute the system matrix A and right hand side RHS.
 #
@@ -44,13 +51,15 @@ def fem1d_linear(f, d2f, n=13):
 #
 #  Consider quadrature point Q: (0, 1, 2 ) in element E.
 #
-        for q in range(0, ng):
+        for q in range(0, q_num):
             #
             #  Map XG and WG from [0,1] to
             #      XQ and QQ in [XL,XR].
             #
-            xq = xl + xg[q] * (xr - xl)
-            wq = wg[q] * (xr - xl)
+            # xq = xl + xg[q] * (xr - xl)
+            # wq = wg[q] * (xr - xl)
+            xq = xl + (xg[q] + 1.0) * (xr - xl) / 2.0
+            wq = wg[q] * (xr - xl) / 2.0
 #
 #  Consider the I-th test function PHI(I,X) and its derivative PHI'(I,X).
 #
@@ -59,10 +68,10 @@ def fem1d_linear(f, d2f, n=13):
 
                 if (i_local == 0):
                     phii = (xq - xr) / (xl - xr)
-                    phiip = 1.0 / (xl - xr)
+                    phiip = 1 / (xl - xr)
                 else:
                     phii = (xq - xl) / (xr - xl)
-                    phiip = 1.0 / (xr - xl)
+                    phiip = 1 / (xr - xl)
 
                 rhs[i] = rhs[i] + wq * phii * d2f(xq)
 #
@@ -73,9 +82,9 @@ def fem1d_linear(f, d2f, n=13):
                     j = j_local + e
 
                     if (j_local == 0):
-                        phijp = 1.0 / (xl - xr)
+                        phijp = 1 / (xl - xr)
                     else:
-                        phijp = 1.0 / (xr - xl)
+                        phijp = 1 / (xr - xl)
 
                     A[i][j] = A[i][j] + wq * phiip * phijp
 #
@@ -118,7 +127,7 @@ def fem1d_linear(f, d2f, n=13):
     for i in range(0, npp):
         up[i] = f(xp[i])
 
-    #plt.plot(x, u, 'bo-', xp, up, 'r.')
+    # plt.plot(x, u, 'bo-', xp, up, 'r.')
     filename = 'fem1d.png'
     plt.savefig(filename)
     # plt.show()
@@ -126,33 +135,36 @@ def fem1d_linear(f, d2f, n=13):
     # plt.figure()
     plt.plot(x, u, 'bo-', label='u')
     plt.plot(xp, up, 'r.', label='up')
+    plt.title('h_linear')
     plt.legend()
     plt.show()
-    #print(xp)
+    # print(xp)
 
     return err, u, up
 
 
 def exact_fn(x, a=0.5, xb=0.2):
 
-    #value = (1 - x) * (np.arctan(a * (x - xb)) + np.arctan(a*xb))
-    value = x * ( 1 - x ) * np.exp ( x )
+    value = (1 - x) * (np.arctan(a * (x - xb)) + np.arctan(a*xb))
+    # value = x * ( 1 - x ) * np.exp ( x )
     return value
 
 
 def rhs_fn(x, a=0.5, xb=0.2):  # PDE
 
     B = x-xb
-    #value = -2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
-    value = -x * ( x + 3 ) * np.exp ( x )
+    value = -2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
+    # value = -x * ( x + 3 ) * np.exp ( x )
     return value
 
 
 if __name__ == '__main__':
     a = 0.5
     xb = 0.2
-    #err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
-    err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
+    # err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
+    err, u, up = fem1d_linear(exact_fn, rhs_fn, 2)
     print(err)
-    #plt.plot(err)
+    # plt.plot(err)
 # %%
+
+
