@@ -1,4 +1,5 @@
 #%%
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import lagrange
@@ -16,12 +17,15 @@ from Func import *
 
 
 def f(x):
+    #return x * ( 1 - x ) * np.exp ( x )
     return (1 - x) * (sp.atan(a * (x - xb)) + sp.atan(a*xb))
 
 
 def d2f(x):
     B = x-xb
+    #return -x * ( x + 3 ) * np.exp ( x )
     return -2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
+
 
 
 a = 0.5
@@ -62,10 +66,12 @@ for i in x_data:
     print('  %2d  %g' % (x_n, e_q))
     
 print(len(x_data))
-plt.scatter(x_data, err_l_tot, label='Linear Error')
-plt.scatter(x_data, err_q_tot, label='Quadratic Error')
+plt.scatter(np.log(x_data), err_l_tot, label='Linear Error')
+plt.scatter(np.log(x_data), err_q_tot, label='Quadratic Error')
 plt.legend()
 plt.show()
 print(err_l_tot)
 print(err_q_tot)
 
+
+# %%
