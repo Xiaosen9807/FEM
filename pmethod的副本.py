@@ -227,5 +227,5 @@ if __name__ == "__main__":
     a = 0.5
     xb = 0.2
     # err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
-    err, u, up = fem1d_pmethod(exact_fn, rhs_fn, p=2)
+    err, u, up = fem1d_pmethod(exact_fn, rhs_fn, p=5)
     # print(err)
