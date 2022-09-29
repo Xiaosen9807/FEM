@@ -34,7 +34,7 @@ def fem1d_quadratic(f, d2f, n_num=11):
         5.0 / 9.0,
         8.0 / 9.0,
         5.0 / 9.0))
-    
+
 #
 #  Set a 3 point quadrature rule on the reference interval [0,1].
 #
@@ -74,7 +74,9 @@ def fem1d_quadratic(f, d2f, n_num=11):
             #  Map XG and WG from [-1,1] to
             #      XQ and WQ in [XL,XM,XR].
             #
-            xq = xl + (xg[q] + 1.0) * (xr - xl) / 2.0
+            # xq = xl + (xg[q] + 1.0) * (xr - xl) / 2.0
+            # wq = wg[q] * (xr - xl) / 2.0
+            xq = ((1.0 - xg[q]) * xl + (1.0 + xg[q]) * xr) / 2.0
             wq = wg[q] * (xr - xl) / 2.0
 #
 #  Evaluate PHI(L), PHI(M) and PHI(R), and their derivatives at XQ.
@@ -127,6 +129,7 @@ def fem1d_quadratic(f, d2f, n_num=11):
     A[n_num-1, n_num-1] = 1.0
     A[n_num-1, 0:n_num-1] = 0.0
     rhs[n_num-1] = f(x[n_num-1])
+    #print('AAAAAAA', A)
 
     #r8vec_print ( n_num, rhs, '  RHS' )
 #
@@ -171,7 +174,7 @@ def fem1d_quadratic(f, d2f, n_num=11):
     return err_tot, u, up
 
 
-def exact_fn(x, a=0.5, xb=0.8):
+def exact_fn(x):
     #
     # EXACT_FN evaluates the exact solution.
     #
@@ -181,7 +184,7 @@ def exact_fn(x, a=0.5, xb=0.8):
     return value
 
 
-def rhs_fn(x, a=0.5, xb=0.8):
+def rhs_fn(x):
     #
     # RHS_FN evaluates the right hand side.
     #
@@ -194,10 +197,10 @@ def rhs_fn(x, a=0.5, xb=0.8):
 #  If this script is called directly, then run it as a program.
 #
 if (__name__ == '__main__'):
-    a = 0.5
+    a = 50
     xb = 0.2
-    err, u, up = fem1d_quadratic(exact_fn, rhs_fn, 7)
-    print(err)
+    for i in [6, 11, 21, 41]:
+        err, u, up = fem1d_quadratic(exact_fn, rhs_fn, i)
+    # print(err)
     # plt.plot(err)
     # %%
-

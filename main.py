@@ -32,7 +32,7 @@ a = 0.5
 xb = 0.2
 err_l_tot=[]
 err_q_tot=[]
-x_data = 2**np.linspace(1, 5, 5)
+x_data = 2**np.linspace(1, 5, 1)
 for i in x_data:
     
     err_l, up_l, u_l = fem1d_linear(f, d2f, int(i)) 

@@ -21,17 +21,11 @@ def fem1d_linear(f, d2f, n=13):
     q_num = 3
 
     xg = np.array((
-        # 0.112701665379258311482073460022,
-        # 0.5,
-        # 0.887298334620741688517926539978))
     -0.774596669241483377035853079956,
     0.0,
     0.774596669241483377035853079956))
 
     wg = np.array((
-        # 5.0 / 18.0,
-        # 8.0 / 18.0,
-        # 5.0 / 18.0))
         5.0 / 9.0,
         8.0 / 9.0,
         5.0 / 9.0))
@@ -58,7 +52,9 @@ def fem1d_linear(f, d2f, n=13):
             #
             # xq = xl + xg[q] * (xr - xl)
             # wq = wg[q] * (xr - xl)
-            xq = xl + (xg[q] + 1.0) * (xr - xl) / 2.0
+            # xq = xl + (xg[q] + 1.0) * (xr - xl) / 2.0
+            # wq = wg[q] * (xr - xl) / 2.0
+            xq = ((1.0 - xg[q]) * xl + (1.0 + xg[q]) * xr) / 2.0
             wq = wg[q] * (xr - xl) / 2.0
 #
 #  Consider the I-th test function PHI(I,X) and its derivative PHI'(I,X).
@@ -85,6 +81,7 @@ def fem1d_linear(f, d2f, n=13):
                         phijp = 1 / (xl - xr)
                     else:
                         phijp = 1 / (xr - xl)
+                    #print(wq * phiip * phijp)
 
                     A[i][j] = A[i][j] + wq * phiip * phijp
 #
@@ -99,8 +96,6 @@ def fem1d_linear(f, d2f, n=13):
     A[n, n] = 1.0
     A[n, 0:n] = 0.0
     rhs[n] = f(x[n])
-    # plt.plot(rhs)
-    # plt.show()
 
     # print(A)
     # print('_-----------------------\n', rhs)
@@ -143,14 +138,14 @@ def fem1d_linear(f, d2f, n=13):
     return err, u, up
 
 
-def exact_fn(x, a=0.5, xb=0.2):
+def exact_fn(x):
 
     value = (1 - x) * (np.arctan(a * (x - xb)) + np.arctan(a*xb))
     # value = x * ( 1 - x ) * np.exp ( x )
     return value
 
 
-def rhs_fn(x, a=0.5, xb=0.2):  # PDE
+def rhs_fn(x):  # PDE
 
     B = x-xb
     value = -2*(a+a**3*B*(B-x+1))/(a**2*B**2+1)**2
@@ -159,11 +154,11 @@ def rhs_fn(x, a=0.5, xb=0.2):  # PDE
 
 
 if __name__ == '__main__':
-    a = 0.5
+    a = 50
     xb = 0.2
-    # err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
-    err, u, up = fem1d_linear(exact_fn, rhs_fn, 2)
-    print(err)
+    for i in [6, 11, 21, 41]:
+        err, u, up = fem1d_linear(exact_fn, rhs_fn, i)
+    #print(err)
     # plt.plot(err)
 # %%
 
