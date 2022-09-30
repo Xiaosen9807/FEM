@@ -90,6 +90,7 @@ def fem1d_linear(f, d2f, n=13):
     A[0, 0] = 1.0
     A[0, 1:n+1] = 0.0
     rhs[0] = f(x[0])
+    print(rhs)
 #
 #  Modify the linear system to enforce the right boundary condition.
 #
@@ -97,11 +98,12 @@ def fem1d_linear(f, d2f, n=13):
     A[n, 0:n] = 0.0
     rhs[n] = f(x[n])
 
-    # print(A)
-    # print('_-----------------------\n', rhs)
+    print(A)
+    print('_-----------------------\n', rhs)
 #  Solve the linear system.
 #
     u = la.solve(A, -rhs)
+
 #
 #  Evaluate the exact solution at the nodes.
 #
@@ -154,10 +156,11 @@ def rhs_fn(x):  # PDE
 
 
 if __name__ == '__main__':
-    a = 50
+    a = 0.5
     xb = 0.2
-    for i in [6, 11, 21, 41]:
-        err, u, up = fem1d_linear(exact_fn, rhs_fn, i)
+    # for i in [6, 11, 21, 41]:
+    #     err, u, up = fem1d_linear(exact_fn, rhs_fn, i)
+    err, u, up = fem1d_linear(exact_fn, rhs_fn, 5)
     #print(err)
     # plt.plot(err)
 # %%

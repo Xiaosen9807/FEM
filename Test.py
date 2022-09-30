@@ -4,7 +4,7 @@ import torch
 from torch import atan
 from torch.autograd import grad
 import numpy as np
-import matplotlib.pyplot as pltcon
+import matplotlib.pyplot as plt
 from scipy.interpolate import lagrange
 from scipy.misc import derivative
 
