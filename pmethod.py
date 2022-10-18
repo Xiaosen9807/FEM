@@ -35,6 +35,10 @@ def Legendre(x=np.linspace(-1, 1, 100), p=5):
 
 #     return phi, dphi
 def Hierarchical(x=np.linspace(0, 1, 3), p=5):
+    # if p == 0:
+    #     return (1-x)/2, np.zeros_like(x)-0.5
+    # elif p == 1:
+    #     return (1+x)/2, np.zeros_like(x)+0.5
     if p == 0:
         return (1-x)/2, np.zeros_like(x)-0.5
     elif p == 1:
@@ -70,7 +74,7 @@ def fem1d_pmethod(f, d2f, s=50, p=5):
 #
 #  Set a 3 point quadrature rule on the reference interval [-1,1].
 #
-    q_num = 3
+    q_num = 10
 
     xg, wg = roots_legendre(q_num)
 
@@ -81,7 +85,6 @@ def fem1d_pmethod(f, d2f, s=50, p=5):
     # rhs = np.zeros(n + 1)
     A = np.zeros((p + 1, p + 1))
     rhs = np.zeros(p + 1)
-   
 
     # for iq = 1 : quad_num
     # x = quad_x(iq);
@@ -97,47 +100,48 @@ def fem1d_pmethod(f, d2f, s=50, p=5):
     #     b(i+1,j+1) = b(i+1,j+1) + bij * quad_w(iq);
 
     for q in range(q_num):
-        xl = x[0]
-        xr = x[-1]
-        xq = ((1.0 - xg[q]) * xl + (1.0 + xg[q]) * xr) / 2.0
-        wq = wg[q] * (xr - xl) / 2.0
+        # xl = x[0]
+        # xr = x[-1]
+        # xq = ((1.0 - xg[q]) * xl + (1.0 + xg[q]) * xr) / 2.0
+        # wq = wg[q] * (xr - xl) / 2.0
+        xq = xg[q]
+        wq = wg[q]
 
         for i in range(p+1):
             phii, phiix = Hierarchical(xq, i)
-            rhs[i] = rhs[i] + wq * phii * d2f(xq)
+            rhs[i] += wq * phii * d2f(xq)
 
             for j in range(p+1):
                 phij, phijx = Hierarchical(xq, j)
-                Aij = phiix * phijx + phii * phij
+                Aij = phii * phij + phiix * phijx
                 A[i, j] += Aij * wq
 
-    A[0, 0] = 1.0
-    A[0, 1:p+1] = 0.0
-    rhs[0] = f(x[0])
+    # A[0, 0] = 1.0
+    # A[0, 1:p+1] = 0.0
+    # A[p, p] = 1.0
+    # A[p, 0:p] = 0.0
 
-    A[p, p] = 1.0
-    A[p, 0:p] = 0.0
-    rhs[p] = f(x[-1])
+    # rhs[0] = f(x[0])
+    # rhs[p] = f(x[-1])
 
-    # print(A.shape)
+    print(A)
 
-    # print('_-----------------------\n', rhs)
+    print('rhs', rhs)
 #  Solve the linear system.
 #
     u_ = la.solve(A, -rhs)
     print(u_)
+    # plt.plot(u_)
     phi = []
     for i in range(p+1):
         phi.append(Hierarchical(x, i)[0])
         #plt.scatter(x, Hierarchical(x, i)[0])
-    phi=np.array(phi)
-    print(phi.shape)
+    phi = np.array(phi)
+
     u = np.dot(phi.T, u_)
     print(u)
-    
-    
-    plt.show()
-        
+
+    # plt.show()
 
 
 #  Evaluate the exact solution at the nodes.
@@ -196,5 +200,5 @@ if __name__ == "__main__":
     a = 0.5
     xb = 0.2
     # err, u, up = fem1d_linear(exact_fn, rhs_fn, 6)
-    err, u, up = fem1d_pmethod(exact_fn, rhs_fn, s=40, p=5)
+    err, u, up = fem1d_pmethod(exact_fn, rhs_fn, s=5, p=3)
     # print(err)

@@ -425,7 +425,7 @@ def ortho(a = None,alpha = None,beta = None,np = None,problem = None,quad_num = 
     
     #  Zero out the B array, so we can start summing up the dot products.
     
-    b[np.arange[1,np + 1+1],np.arange[1,np + 1+1]] = 0.0
+    b=np.zeros  
     
     #  Approximate the integral of the product of basis function
 #  I and basis function J over the interval [-1,1].

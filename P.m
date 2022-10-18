@@ -861,7 +861,10 @@ function f = sol ( a, alpha, beta, np, problem, quad_num, quad_w, quad_x )
     end
   end
 
+  ttt=0;
+
   f(1:np+1) = f(1:np+1) ./ a(1:np+1);
+  s=0;
 
   return
 end
