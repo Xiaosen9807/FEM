@@ -22,7 +22,7 @@ def fn_test(x):
     return 0.14588*x*(1-x)+0.16279*x**2*(1-x)
 
 
-def G_integrate(u, x, N=3, scale=(0, 1)):
+def G_integrate(u, N=3, scale=(0, 1)):
     N = N  # 取3个样本点
     a = scale[0]  # 积分上下限
     b = scale[1]
